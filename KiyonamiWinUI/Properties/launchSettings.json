@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KiyonamiWinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "KiyonamiWinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
