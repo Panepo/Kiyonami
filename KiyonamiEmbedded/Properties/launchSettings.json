@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KiyonamiEmbedded (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "KiyonamiEmbedded (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
