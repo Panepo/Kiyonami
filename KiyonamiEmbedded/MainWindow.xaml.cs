@@ -101,7 +101,7 @@ namespace KiyonamiEmbedded
             }
         }
 
-        private async void ButtonChatClick(object sender, RoutedEventArgs e)
+        private void ButtonChatClick(object sender, RoutedEventArgs e)
         {
             if (_isListening)
             {
@@ -118,7 +118,7 @@ namespace KiyonamiEmbedded
                     selectedLang,
                     _selWaveIn.ID,
                     true,
-                    "keyword_getacLow.table");
+                    "");
                 stt.OnProcessed += SttEventHandler;
 
                 ButtonChat.Content = "Stop Listening";
@@ -137,12 +137,17 @@ namespace KiyonamiEmbedded
                 _isTranslatingText = false;
             }
             else
-            { 
+            {
+                _isTranslatingText = true;
                 string inputText = TextInput.Text;
                 string targetLanguage = (string)ComboBoxLangOutput.SelectedValue;
+
+                ButtonTrans.Content = "Stop Translating";
+
                 string translatedText = await _textTransClient.TranslateText(inputText, targetLanguage);
                 TextOutput.Text = translatedText;
-                ButtonTrans.Content = "Stop Translating";
+                ButtonTrans.Content = "Translate Text";
+                _isTranslatingText = false;
             }
         }
     }

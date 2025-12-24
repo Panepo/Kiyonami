@@ -11,7 +11,7 @@ namespace Kiyonami
 {
     public partial class AzureSTTWinUI
     {
-        private static readonly string modelPath = "./STTmodels";
+        private static readonly string modelPath = "STTmodels";
 
         public enum AzureSttStatus
         {
@@ -167,10 +167,13 @@ namespace Kiyonami
         }
 
         public void StopRecognition()
-        {            
-            while (_phase == AzureSttPhase.SPEECH)
+        {   
+            if (_useKeyword)
             {
-                Thread.Sleep(1000);
+                while (_phase == AzureSttPhase.SPEECH)
+                {
+                    Thread.Sleep(1000);
+                }
             }
 
             _stopRecognition?.SetResult(0);
