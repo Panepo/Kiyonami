@@ -17,35 +17,44 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <ComboBox
-                x:Name="ComboBoxWaveIn"
-                Margin="5"
-                Width="140"
-                Height="35"
-                SelectedIndex="0">
+                    x:Name="ComboBoxWaveIn"
+                    Margin="5"
+                    Width="140"
+                    Height="35"
+                    SelectionChanged="ComboBoxWaveInChanged"
+                    SelectedIndex="0">
                 </ComboBox>
                 <ComboBox
-                x:Name="ComboBoxLangInput"
-                Margin="5"
-                Width="140"
-                Height="35"
-                SelectedIndex="0">
+                    x:Name="ComboBoxWaveOut"
+                    Margin="5"
+                    Width="140"
+                    Height="35"
+                    SelectionChanged="ComboBoxWaveOutChanged"
+                    SelectedIndex="0">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox
+                    x:Name="ComboBoxLangInput"
+                    Margin="5"
+                    Width="140"
+                    Height="35"
+                    SelectedIndex="0">
                 </ComboBox>
                 <Button x:Name="ButtonChat" Content="Start Listening" Click="ButtonChatClick" Width="140" Height="35" Margin="5" HorizontalAlignment="Left" />
             </StackPanel>
             <TextBox x:Name="TextInput" Width="740" Height="300" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal">
                 <ComboBox
-                x:Name="ComboBoxLangOutput"
-                Margin="5"
-                Width="140"
-                Height="35"
-                SelectedIndex="0">
+                    x:Name="ComboBoxLangInput2"
+                    Margin="5"
+                    Width="140"
+                    Height="35"
+                    SelectedIndex="0">
                 </ComboBox>
-                <Button x:Name="ButtonTrans" Click="ButtonTransClick" Width="140" Height="35" Margin="5" HorizontalAlignment="Left" IsEnabled="False">
-                    <TextBlock x:Name="ButtonTransText">Translate</TextBlock>
-                </Button>
+                <Button x:Name="ButtonChat2" Content="Start Listening" Click="ButtonChatClick2" Width="140" Height="35" Margin="5" HorizontalAlignment="Left" />
             </StackPanel>
-            <TextBox x:Name="TextOutput" Width="740" Height="300" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
+            <TextBox x:Name="TextInput2" Width="740" Height="300" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
         </StackPanel>
     </Grid>
 </Window>
