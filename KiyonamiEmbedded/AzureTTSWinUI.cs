@@ -54,7 +54,7 @@ namespace Kiyonami
             public AzureTtsOutput Output { get; set; }
         }
 
-        private AzureTtsStatus _status = AzureTtsStatus.NOT_INITIAL;
+        private readonly AzureTtsStatus _status = AzureTtsStatus.NOT_INITIAL;
         public AzureTtsStatus Status
         {
             get { return _status; }
@@ -148,7 +148,7 @@ namespace Kiyonami
                         _output.message = $"Speech synthesized to speaker for text [{text}]";
                         _output.status = AzureTtsStatus.SYNTHESIZED;
                         eventArgs.Output = _output;
-                        if (OnProcessed != null) OnProcessed(this, eventArgs);
+                        OnProcessed?.Invoke(this, eventArgs);
                     }
                     else if (result.Reason == ResultReason.Canceled)
                     {
@@ -157,7 +157,7 @@ namespace Kiyonami
                         _output.status = AzureTtsStatus.CANCELED;
                         _output.message = $"CANCELED: Reason={cancellation.Reason} ErrorCode={cancellation.ErrorCode} ErrorDetails=\"{cancellation.ErrorDetails}\"";
                         eventArgs.Output = _output;
-                        if (OnProcessed != null) OnProcessed(this, eventArgs);
+                        OnProcessed?.Invoke(this, eventArgs);
                     }
                 }
             }
@@ -180,11 +180,11 @@ namespace Kiyonami
             _output.status = AzureTtsStatus.SESSION_START;
             _output.message = "Synthesis started event.";
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs
+            ProcessEventArgs eventArgs = new()
             {
                 Output = _output
             };
-            if(OnProcessed != null) OnProcessed(this, eventArgs);
+            OnProcessed?.Invoke(this, eventArgs);
         }
 
         private void HandleSynthesizing(object? sender, SpeechSynthesisEventArgs e)
@@ -192,7 +192,7 @@ namespace Kiyonami
             _output.status = AzureTtsStatus.SYNTHESIZING;
             _output.message = $"Synthesizing, received an audio chunk of {e.Result.AudioData.Length} bytes.";
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
+            ProcessEventArgs eventArgs = new() { Output = _output };
             OnProcessed?.Invoke(this, eventArgs);
         }
 
@@ -201,7 +201,7 @@ namespace Kiyonami
             _output.status = AzureTtsStatus.SYNTHESIZED;
             _output.message = $"Synthesized.";
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
+            ProcessEventArgs eventArgs = new() { Output = _output };
             OnProcessed?.Invoke(this, eventArgs);
         }
     }

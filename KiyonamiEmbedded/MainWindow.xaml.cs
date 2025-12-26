@@ -17,7 +17,7 @@ namespace KiyonamiEmbedded
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private AudioEnumerator _enumerator = null!;
+        private readonly AudioEnumerator _enumerator = null!;
         private MMDevice _selWaveIn = null!;
         private MMDevice _selWaveOut = null!;
 
@@ -26,7 +26,7 @@ namespace KiyonamiEmbedded
         private bool _recognizingDirection = false;
         private string _recognizedTextTemp = string.Empty;
 
-        private TextTransClient? _textTransClient;
+        private readonly TextTransClient? _textTransClient;
         private AzureTTSWinUI tts = null!;
 
         public MainWindow()
@@ -69,6 +69,8 @@ namespace KiyonamiEmbedded
         {
             if (e.Output.status == AzureSTTWinUI.AzureSttStatus.RECOGNIZED)
             {
+                _recognizedTextTemp = e.Output.message;
+
                 if (_recognizingDirection)
                 {
                     DispatcherQueue.TryEnqueue(() =>
@@ -84,49 +86,29 @@ namespace KiyonamiEmbedded
                     });
                 }
             }
-            //else if (e.Output.status == AzureSTTWinUI.AzureSttStatus.RECOGNIZING)
-            //{
-            //    DispatcherQueue.TryEnqueue(() =>
-            //    {
-            //        if (_recognizingDirection)
-            //        {
-            //            // Remove the previous temporary text
-            //            if (!string.IsNullOrEmpty(_recognizedTextTemp))
-            //            {
-            //                int startIndex = TextInput.Text.LastIndexOf(_recognizedTextTemp);
-            //                if (startIndex >= 0)
-            //                {
-            //                    TextInput.Text = TextInput.Text.Remove(startIndex, _recognizedTextTemp.Length);
-            //                }
-            //            }
-            //            // Add the new temporary text
-            //            _recognizedTextTemp = e.Output.message;
-            //            TextInput.Text += _recognizedTextTemp;
-            //        }
-            //        else
-            //        {
-            //            // Remove the previous temporary text
-            //            if (!string.IsNullOrEmpty(_recognizedTextTemp))
-            //            {
-            //                int startIndex = TextInput2.Text.LastIndexOf(_recognizedTextTemp);
-            //                if (startIndex >= 0)
-            //                {
-            //                    TextInput2.Text = TextInput2.Text.Remove(startIndex, _recognizedTextTemp.Length);
-            //                }
-            //            }
-            //            // Add the new temporary text
-            //            _recognizedTextTemp = e.Output.message;
-            //            TextInput2.Text += _recognizedTextTemp;
-            //        }
-            //    });
-            //}
+            else if (e.Output.status == AzureSTTWinUI.AzureSttStatus.RECOGNIZING)
+            {
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    if (_recognizingDirection)
+                    {
+                        TextInput.Text = _recognizedTextTemp + e.Output.message;
+                    }
+                    else
+                    {
+                        TextInput2.Text = _recognizedTextTemp + e.Output.message;
+                    }
+                });
+            }
         }
 
         private void ComboBoxWaveInChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_enumerator == null) throw new Exception("AudioEnumerator is not initialized.");
+
             string selectedWaveIn = (string)ComboBoxWaveIn.SelectedValue;
 
-            for (var i = 0; i < _enumerator.WaveInDevices.Count(); i++)
+            for (var i = 0; i < _enumerator.WaveInDevices.Length; i++)
             {
                 if (selectedWaveIn == _enumerator.WaveInDevices[i].FriendlyName)
                 {
@@ -138,9 +120,11 @@ namespace KiyonamiEmbedded
 
         private void ComboBoxWaveOutChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_enumerator == null) throw new Exception("AudioEnumerator is not initialized.");
+
             string selectedWaveOut = (string)ComboBoxWaveOut.SelectedValue;
 
-            for (var i = 0; i < _enumerator.WaveOutDevices.Count(); i++)
+            for (var i = 0; i < _enumerator.WaveOutDevices.Length; i++)
             {
                 if (selectedWaveOut == _enumerator.WaveOutDevices[i].FriendlyName)
                 {
@@ -197,6 +181,7 @@ namespace KiyonamiEmbedded
                 ButtonChat2.IsEnabled = false;
                 _isListening = true;
                 TextInput.Text = string.Empty;
+                _recognizedTextTemp = string.Empty;
                 await stt.RecognitionAsync();
             }
         }
@@ -248,6 +233,7 @@ namespace KiyonamiEmbedded
                 ButtonChat.IsEnabled = false;
                 _isListening = true;
                 TextInput2.Text = string.Empty;
+                _recognizedTextTemp = string.Empty;
                 await stt.RecognitionAsync();
             }
         }

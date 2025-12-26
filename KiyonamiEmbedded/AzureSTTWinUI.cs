@@ -201,7 +201,7 @@ namespace Kiyonami
                     await _recognizer.StartContinuousRecognitionAsync().ConfigureAwait(false);
                 }
 				
-				Task.WaitAny(new[] { _stopRecognition.Task });
+				Task.WaitAny([_stopRecognition.Task]);
                 await _recognizer.StopContinuousRecognitionAsync().ConfigureAwait(false);
             }
         }
@@ -213,7 +213,7 @@ namespace Kiyonami
             _stopRecognition = new TaskCompletionSource<int>();
 
             string result = "";
-            EventHandler<SpeechRecognitionEventArgs> OnceHandler = new EventHandler<SpeechRecognitionEventArgs>((obj, e) =>
+            EventHandler<SpeechRecognitionEventArgs> OnceHandler = new((obj, e) =>
             {
                 if (result == "" && e.Result.Text != "")
                 {
@@ -238,7 +238,7 @@ namespace Kiyonami
                     await _recognizer.StartContinuousRecognitionAsync().ConfigureAwait(false);
                 }
 
-                Task.WaitAny(new[] { _stopRecognition.Task });
+                Task.WaitAny([_stopRecognition.Task]);
                 _recognizer.Recognized -= OnceHandler;
                 await _recognizer.StopContinuousRecognitionAsync().ConfigureAwait(false);
             }
@@ -251,7 +251,7 @@ namespace Kiyonami
             _output.message = "";
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs();
+            ProcessEventArgs eventArgs = new();
 
             if (e.Result.Reason == ResultReason.RecognizingSpeech)
             {
@@ -259,7 +259,7 @@ namespace Kiyonami
                 _output.message = e.Result.Text;
 
                 eventArgs.Output = _output;
-                if (OnProcessed != null) OnProcessed(this, eventArgs);
+                OnProcessed?.Invoke(this, eventArgs);
             }
             else if (e.Result.Reason == ResultReason.RecognizingKeyword)
             {
@@ -267,7 +267,7 @@ namespace Kiyonami
                 _output.message = e.Result.Text;
 
                 eventArgs.Output = _output;
-                if (OnProcessed != null) OnProcessed(this, eventArgs);
+                OnProcessed?.Invoke(this, eventArgs);
             }
         }
 
@@ -277,7 +277,7 @@ namespace Kiyonami
             _output.message = "";
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs();
+            ProcessEventArgs eventArgs = new();
 
             if (e.Result.Reason == ResultReason.RecognizedSpeech)
             {
@@ -285,7 +285,7 @@ namespace Kiyonami
                 _output.message = e.Result.Text;
 
                 eventArgs.Output = _output;
-                if(OnProcessed != null) OnProcessed(this, eventArgs);
+                OnProcessed?.Invoke(this, eventArgs);
             }
             else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
@@ -296,7 +296,7 @@ namespace Kiyonami
                 _output.phase = _phase;
 
                 eventArgs.Output = _output;
-                if (OnProcessed != null) OnProcessed(this, eventArgs);
+                OnProcessed?.Invoke(this, eventArgs);
             }
             else if (e.Result.Reason == ResultReason.NoMatch)
             {
@@ -304,7 +304,7 @@ namespace Kiyonami
                 _output.message = "";
 
                 eventArgs.Output = _output;
-                if (OnProcessed != null) OnProcessed(this, eventArgs);
+                OnProcessed?.Invoke(this, eventArgs);
             }
         }
 
@@ -314,8 +314,8 @@ namespace Kiyonami
             _output.message = $"CANCELED: Reason={e.Reason} Code={e.ErrorCode} Details={e.ErrorDetails}";
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
-            if (OnProcessed != null) OnProcessed(this, eventArgs);
+            ProcessEventArgs eventArgs = new() { Output = _output };
+            OnProcessed?.Invoke(this, eventArgs);
         }
 
         private void HandleSessionStart(object? sender, SessionEventArgs e)
@@ -324,8 +324,8 @@ namespace Kiyonami
             _output.message = "Session started event.";
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
-            if (OnProcessed != null) OnProcessed(this, eventArgs);
+            ProcessEventArgs eventArgs = new() { Output = _output };
+            OnProcessed?.Invoke(this, eventArgs);
         }
 
         private void HandleSessionStop(object? sender, SessionEventArgs e)
@@ -337,8 +337,8 @@ namespace Kiyonami
 
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
-            if (OnProcessed != null) OnProcessed(this, eventArgs);
+            ProcessEventArgs eventArgs = new() { Output = _output };
+            OnProcessed?.Invoke(this, eventArgs);
         }
 
         private void HandleSpeechStart(object? sender, RecognitionEventArgs e)
@@ -347,8 +347,8 @@ namespace Kiyonami
             _output.message = "Speech start detect.";
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
-            if (OnProcessed != null) OnProcessed(this, eventArgs);
+            ProcessEventArgs eventArgs = new() { Output = _output };
+            OnProcessed?.Invoke(this, eventArgs);
         }
         
         private void HandleSpeechEnd(object? sender, RecognitionEventArgs e)
@@ -357,8 +357,8 @@ namespace Kiyonami
             _output.message = "Speech end detect.";
             _output.phase = _phase;
 
-            ProcessEventArgs eventArgs = new ProcessEventArgs { Output = _output };
-            if (OnProcessed != null) OnProcessed(this, eventArgs);
+            ProcessEventArgs eventArgs = new() { Output = _output };
+            OnProcessed?.Invoke(this, eventArgs);
         }   
     }
 }
