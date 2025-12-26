@@ -43,7 +43,7 @@
                 </ComboBox>
                 <Button x:Name="ButtonChat" Content="Start Listening" Click="ButtonChatClick" Width="140" Height="35" Margin="5" HorizontalAlignment="Left" />
             </StackPanel>
-            <TextBox x:Name="TextInput" Width="740" Height="300" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
+            <TextBox x:Name="TextInput" Width="740" Height="150" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal">
                 <ComboBox
                     x:Name="ComboBoxLangInput2"
@@ -54,7 +54,7 @@
                 </ComboBox>
                 <Button x:Name="ButtonChat2" Content="Start Listening" Click="ButtonChatClick2" Width="140" Height="35" Margin="5" HorizontalAlignment="Left" />
             </StackPanel>
-            <TextBox x:Name="TextInput2" Width="740" Height="300" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
+            <TextBox x:Name="TextInput2" Width="740" Height="150" Margin="5" HorizontalAlignment="Left" TextWrapping="Wrap" />
         </StackPanel>
     </Grid>
 </Window>

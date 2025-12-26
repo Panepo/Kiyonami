@@ -59,6 +59,8 @@ namespace KiyonamiEmbedded
                 ComboBoxLangInput.Items.Add(lang.Name);
                 ComboBoxLangInput2.Items.Add(lang.Name);
             }
+            ComboBoxLangInput.SelectedIndex = 0;
+            ComboBoxLangInput2.SelectedIndex = 1;
 
             _textTransClient = new TextTransClient();
         }
