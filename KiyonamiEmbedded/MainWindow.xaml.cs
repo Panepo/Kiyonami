@@ -5,6 +5,7 @@ using NAudio.CoreAudioApi;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using static Kiyonami.Languages;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -28,6 +29,7 @@ namespace KiyonamiEmbedded
 
         private readonly TextTransClient? _textTransClient;
         private AzureTTSWinUI tts = null!;
+        private Task taskTts = null!;
 
         public MainWindow()
         {
@@ -69,22 +71,22 @@ namespace KiyonamiEmbedded
         {
             if (e.Output.status == AzureSTTWinUI.AzureSttStatus.RECOGNIZED)
             {
-                _recognizedTextTemp = e.Output.message;
-
                 if (_recognizingDirection)
                 {
                     DispatcherQueue.TryEnqueue(() =>
                     {
-                        TextInput.Text += e.Output.message + " ";
+                        TextInput.Text = _recognizedTextTemp + e.Output.message + " ";
                     });
                 }
                 else
                 {
                     DispatcherQueue.TryEnqueue(() =>
                     {
-                        TextInput2.Text += e.Output.message + " ";
+                        TextInput2.Text = _recognizedTextTemp + e.Output.message + " ";
                     });
                 }
+
+                _recognizedTextTemp = e.Output.message;
             }
             else if (e.Output.status == AzureSTTWinUI.AzureSttStatus.RECOGNIZING)
             {
@@ -156,7 +158,8 @@ namespace KiyonamiEmbedded
                     targetLang.Value.TtsCode,
                     _selWaveOut.ID);
 
-                tts.SynthesisToSpeakerAsync(translatedText);
+                taskTts = new Task(() => tts.SynthesisToSpeakerAsync(translatedText));
+                taskTts.Start();
 
                 ButtonChat.Content = "Start Listening";
                 _isListening = false;
@@ -208,7 +211,8 @@ namespace KiyonamiEmbedded
                     targetLang.Value.TtsCode,
                     _selWaveOut.ID);
 
-                tts.SynthesisToSpeakerAsync(translatedText);
+                taskTts = new Task(() => tts.SynthesisToSpeakerAsync(translatedText));
+                taskTts.Start();
 
                 ButtonChat2.Content = "Start Listening";
                 _isListening = false;
